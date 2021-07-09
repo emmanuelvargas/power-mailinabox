@@ -19,7 +19,7 @@ fi
 
 echo "Installing Nginx (web server)..."
 
-apt_install nginx php-cli php-fpm idn2
+apt_install nginx php-cli php-fpm idn2 mariadb-server-10.3 mariadb-client-10.3 php-pdo-mysql
 
 rm -f /etc/nginx/sites-enabled/default
 

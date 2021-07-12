@@ -64,6 +64,22 @@ InstallNextcloud() {
 	# that error.
 	chown -f -R www-data.www-data $NEXTCLOUD_FULL/ || /bin/true
 
+# create mysql DB
+cat > /tmp/mysqlcreate << EOF;
+CREATE USER 'nextcloudfull'@'localhost' IDENTIFIED BY 'BLA123';
+CREATE DATABASE IF NOT EXISTS nextcloud CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloudfull'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+
+sudo mysql -uroot -p < /tmp/mysqlcreate
+
+rm /tmp/mysqlcreate
+
+    sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/occ maintenance:install --database=mysql --database-name=nextcloud --database-user=nextcloudfull --database-pass=BLA123 --admin-user=toto --admin-pass=toto --admin-email=manu@evargas.org
+
+    
+
     # Add missing indices. NextCloud didn't include this in the normal upgrade because it might take some time.
 	sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/occ db:add-missing-indices
 
@@ -123,16 +139,3 @@ cat > /etc/cron.d/mailinabox-nextcloudfull << EOF;
 */5 * * * *	root	sudo -u www-data php -f $NEXTCLOUD_FULL/nextcloud/cron.php
 EOF
 chmod +x /etc/cron.d/mailinabox-nextcloudfull
-
-
-# create mysql DB
-cat > /tmp/mysqlcreate << EOF;
-CREATE USER 'nextcloudfull'@'localhost' IDENTIFIED BY 'BLA123';
-CREATE DATABASE IF NOT EXISTS nextcloud CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloudfull'@'localhost';
-FLUSH PRIVILEGES;
-EOF
-
-sudo mysql -uroot -p < /tmp/mysqlcreate
-
-rm /tmp/mysqlcreate

@@ -72,9 +72,9 @@ GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloudfull'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
-sudo mysql -uroot -p < /tmp/mysqlcreate
+    sudo mysql -uroot -p < /tmp/mysqlcreate
 
-rm /tmp/mysqlcreate
+    rm /tmp/mysqlcreate
 
     sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/occ maintenance:install --database=mysql --database-name=nextcloud --database-user=nextcloudfull --database-pass=BLA123 --admin-user=toto --admin-pass=toto --admin-email=manu@evargas.org
 
@@ -131,7 +131,65 @@ hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:disab
 hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:enable contacts
 hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:enable calendar
 
+rm /var/www/nextcloudfull/nextcloud/config/config.php
 
+cat > /var/www/nextcloudfull/nextcloud/config/config.php << EOF;
+<?php
+$CONFIG = array (
+  'instanceid' => 'ocwly6b198oe',
+  'forcessl' => true,
+  'user_backends' => 
+  array (
+    0 => 
+    array (
+      'class' => 'OC_User_IMAP',
+      'arguments' => 
+      array (
+        0 => '127.0.0.1',
+        1 => 143,
+        2 => NULL,
+      ),
+    ),
+  ),
+  'mail_smtpmode' => 'sendmail',
+  'mail_smtpsecure' => '',
+  'mail_smtpauthtype' => 'LOGIN',
+  'mail_smtpauth' => false,
+  'mail_smtphost' => '',
+  'mail_smtpport' => '',
+  'mail_smtpname' => '',
+  'mail_smtppassword' => '',
+  'mail_from_address' => 'administrator',
+  'passwordsalt' => 'QFGemTBcG88bXNgC85faa5jfNwAPf1',
+  'secret' => 'GiGf/KCE89gy1R+50ScZ9Hg34t1kvft7lEJhzv9XZoQ401UA',
+  'trusted_domains' => 
+  array (
+    0 => 'nextcloud.evargas.org',
+  ),
+  'datadirectory' => '/var/www/nextcloudfull/nextcloud/data',
+  'version' => '22.0.0.11',
+  'dbtype' => 'mysql',
+  'dbname' => 'nextcloud',
+  'dbhost' => 'localhost',
+  'dbport' => '',
+  'dbtableprefix' => 'oc_',
+  'mysql.utf8mb4' => true,
+  'dbuser' => 'nextcloudfull',
+  'dbpassword' => 'BLA123',
+  'installed' => true,
+  'logtimezone' => 'Europe/Paris',
+  'logdateformat' => 'Y-m-d H:i:s',
+  'mail_domain' => 'mybox.evargas.org',
+  'theme' => '',
+  'loglevel' => 2,
+  'maintenance' => false,
+);
+EOF
+
+chown www-data:www-data /var/www/nextcloudfull/nextcloud/config/config.php
+
+sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/occ upgrade
+sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/occ maintenance:mode --off
 
 # Set up a cron job for Nextcloud.
 cat > /etc/cron.d/mailinabox-nextcloudfull << EOF;

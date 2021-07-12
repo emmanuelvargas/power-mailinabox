@@ -96,8 +96,8 @@ contacts_ver=4.0.0
 contacts_hash=f893ca57a543b260c9feeecbb5958c00b6998e18
 calendar_ver=2.3.0
 calendar_hash=7580f85c781b4709b22a70fdb28cec1ec04361a8
-user_external_ver=2.0.0
-user_external_hash=e3c96426128fb3a134840a1f9024d26836cb80c2
+user_external_ver=1.0.0
+user_external_hash=3bf2609061d7214e7f0f69dd8883e55c4ec8f50a
 
 mkdir -p $NEXTCLOUD_FULL
 

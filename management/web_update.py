@@ -40,10 +40,10 @@ def get_web_domains(env, include_www_redirects=True, include_auto=True, exclude_
 	# 'nextcloud. for a full nextcloud setup
 	domains |= set('nextcloud.' + maildomain for maildomain in get_mail_domains(env, users_only=True))
 
-	#if exclude_dns_elsewhere:
+	if exclude_dns_elsewhere:
 		# ...Unless the domain has an A/AAAA record that maps it to a different
 		# IP address than this box. Remove those domains from our list.
-	#	domains -= get_domains_with_a_records(env)
+		domains -= get_domains_with_a_records(env)
 
 	# Ensure the PRIMARY_HOSTNAME is in the list so we can serve webmail
 	# as well as Z-Push for Exchange ActiveSync. This can't be removed
@@ -82,6 +82,7 @@ DOMAIN_PRIMARY = 1
 DOMAIN_WWW = 2
 DOMAIN_REDIRECT = 4
 DOMAIN_WKD = 8
+DOMAIN_NC = 16
 
 def get_web_domain_flags(env):
 	flags = dict()
@@ -102,6 +103,7 @@ def get_web_domain_flags(env):
 
 	for d, _ in zones:
 		flags[f"www.{d}"] = flags.get(d, 0) | DOMAIN_WWW
+		flags[f"nextcloud.{d}"] = flags.get(d, 0) | DOMAIN_NC
 
 	for d in redirects:
 		flags[d] = flags.get(d, 0) | DOMAIN_REDIRECT
@@ -128,6 +130,7 @@ def do_web_update(env):
 	template2 = open(os.path.join(os.path.dirname(__file__), "../conf/nginx-primaryonly.conf")).read()
 	template3 = "\trewrite ^(.*) https://$REDIRECT_DOMAIN$1 permanent;\n"
 	template4 = open(os.path.join(os.path.dirname(__file__), "../conf/nginx-openpgpkey.conf")).read()
+	template5 = open(os.path.join(os.path.dirname(__file__), "../conf/nginx-nextcloud.conf")).read()
 
 	# Add the PRIMARY_HOST configuration first so it becomes nginx's default server.
 	nginx_conf += make_domain_config(env['PRIMARY_HOSTNAME'], [template0, template1, template2], ssl_certificates, env)

@@ -135,7 +135,7 @@ rm /var/www/nextcloudfull/nextcloud/config/config.php
 
 cat > /var/www/nextcloudfull/nextcloud/config/config.php << EOF;
 <?php
-$CONFIG = array (
+\$CONFIG = array (
   'instanceid' => 'ocwly6b198oe',
   'forcessl' => true,
   'user_backends' => 

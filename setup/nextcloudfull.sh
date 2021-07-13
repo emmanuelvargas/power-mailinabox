@@ -48,9 +48,9 @@ InstallNextcloud() {
 	tar xf /tmp/calendar.tgz -C $NEXTCLOUD_FULL/nextcloud/apps/
 	rm /tmp/calendar.tgz
 
-    wget_verify https://github.com/nextcloud/user_external/releases/download/v$version_user_external/user_external-$version_user_external.tar.gz $hash_user_external /tmp/user_external.tgz
-	tar -xf /tmp/user_external.tgz -C $NEXTCLOUD_FULL/nextcloud/apps/
-	rm /tmp/user_external.tgz
+    # wget_verify https://github.com/nextcloud/user_external/releases/download/v$version_user_external/user_external-$version_user_external.tar.gz $hash_user_external /tmp/user_external.tgz
+	# tar -xf /tmp/user_external.tgz -C $NEXTCLOUD_FULL/nextcloud/apps/
+	# rm /tmp/user_external.tgz
 
     # Fix weird permissions.
 	chmod 750 $NEXTCLOUD_FULL/nextcloud/{apps,config}
@@ -130,6 +130,9 @@ hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:disab
 #hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:enable user_external
 hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:enable contacts
 hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:enable calendar
+# force because not validated > 21
+hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:install -f user_external
+hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:enable -f user_external
 
 rm /var/www/nextcloudfull/nextcloud/config/config.php
 

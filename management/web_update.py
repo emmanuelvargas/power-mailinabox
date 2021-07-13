@@ -148,6 +148,8 @@ def do_web_update(env):
 			# This is a regular domain.
 			if flags & DOMAIN_WKD == DOMAIN_WKD:
 				nginx_conf += make_domain_config(domain, [template0, template1, template4], ssl_certificates, env)
+			elif flags & DOMAIN_NC == 16:
+                nginx_conf += make_domain_config(domain, [template0, template5], ssl_certificates, env)
 			elif flags & DOMAIN_REDIRECT == 0:
 				nginx_conf += make_domain_config(domain, [template0, template1], ssl_certificates, env)
 			else:

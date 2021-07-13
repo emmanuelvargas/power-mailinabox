@@ -72,7 +72,7 @@ GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloudfull'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
-    sudo mysql -uroot -p < /tmp/mysqlcreate
+    mysql -uroot < /tmp/mysqlcreate
 
     rm /tmp/mysqlcreate
 

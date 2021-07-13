@@ -131,7 +131,7 @@ hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:disab
 hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:enable contacts
 hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:enable calendar
 # force because not validated > 21
-hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:install -f user_external
+# hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:install -f user_external
 hide_output sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/console.php app:enable -f user_external
 
 rm /var/www/nextcloudfull/nextcloud/config/config.php

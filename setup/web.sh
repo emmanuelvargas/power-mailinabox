@@ -19,7 +19,21 @@ fi
 
 echo "Installing Nginx (web server)..."
 
-apt_install nginx php-cli php-fpm idn2 mariadb-server-10.3 mariadb-client-10.3 php-pdo-mysql
+# debconf issue in sudo
+sudo su -
+export DEBIAN_FRONTEND=noninteractive
+debconf-set-selections <<< 'mariadb-server mysql-server/root_password password PASS'
+debconf-set-selections <<< 'mariadb-server mysql-server/root_password_again password PASS'
+apt-get install -y mariadb-server
+exit
+
+cat > ~/.my.cnf <<EOF;
+[client]
+user=root
+password=PASS
+EOF
+
+apt_install nginx php-cli php-fpm idn2  mariadb-client php-pdo-mysql
 
 rm -f /etc/nginx/sites-enabled/default
 

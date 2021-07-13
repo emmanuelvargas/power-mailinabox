@@ -19,13 +19,8 @@ fi
 
 echo "Installing Nginx (web server)..."
 
-# debconf issue in sudo
-sudo su -
-export DEBIAN_FRONTEND=noninteractive
-debconf-set-selections <<< 'mariadb-server mysql-server/root_password password PASS'
-debconf-set-selections <<< 'mariadb-server mysql-server/root_password_again password PASS'
-apt-get install -y mariadb-server
-exit
+
+sudo -- bash -c  "DEBIAN_FRONTEND=noninteractive && debconf-set-selections <<< 'mariadb-server-10.3 mysql-server/root_password password PASS' && debconf-set-selections <<< 'mariadb-server-10.3 mysql-server/root_password_again password PASS' && apt-get install -y mariadb-server-10.3 mariadb-client-10.3"
 
 cat > ~/.my.cnf <<EOF;
 [client]

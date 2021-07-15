@@ -22,7 +22,7 @@ echo "Installing Nginx (web server)..."
 SECRET_KEY_SQL=$(dd if=/dev/urandom bs=1 count=32 2>/dev/null | base64 | sed s/=//g)
 
 
-sudo -- bash -c  "DEBIAN_FRONTEND=noninteractive hide_output && debconf-set-selections <<< 'mariadb-server-10.3 mysql-server/root_password password ${SECRET_KEY_SQL}' && debconf-set-selections <<< 'mariadb-server-10.3 mysql-server/root_password_again password ${SECRET_KEY_SQL}' && DEBIAN_FRONTEND=noninteractive apt-get install -qq -o=Dpkg::Use-Pty=0 -y mariadb-server-10.3 mariadb-client-10.3"
+sudo -- bash -c  "DEBIAN_FRONTEND=noninteractive && debconf-set-selections <<< 'mariadb-server-10.3 mysql-server/root_password password ${SECRET_KEY_SQL}' && debconf-set-selections <<< 'mariadb-server-10.3 mysql-server/root_password_again password ${SECRET_KEY_SQL}' && DEBIAN_FRONTEND=noninteractive apt-get install -qq -o=Dpkg::Use-Pty=0 -y mariadb-server-10.3 mariadb-client-10.3"
 
 cat > ~/.my.cnf <<EOF;
 [client]

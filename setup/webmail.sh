@@ -33,8 +33,9 @@ VERSION=1.4.11
 HASH=3877f0e70f29e7d0612155632e48c3db1e626be3
 PERSISTENT_LOGIN_VERSION=6b3fc450cae23ccb2f393d0ef67aa319e877e435 # version 5.2.0
 HTML5_NOTIFIER_VERSION=68d9ca194212e15b3c7225eb6085dbcf02fd13d7 # version 0.6.4+
-CARDDAV_VERSION=3.0.3
-CARDDAV_HASH=d1e3b0d851ffa2c6bd42bf0c04f70d0e1d0d78f8
+CONTEXT_MENU_VERSION=602a3812922fb8f71814eb3b8d91e9b7859aab7e # version 3.2.1
+CARDDAV_VERSION=4.1.2
+CARDDAV_HASH=8692a6738478c2d61e3d2a728a7c061789a124db
 
 UPDATE_KEY=$VERSION:$PERSISTENT_LOGIN_VERSION:$HTML5_NOTIFIER_VERSION:$CARDDAV_VERSION
 
@@ -75,15 +76,19 @@ if [ $needs_update == 1 ]; then
 	# install roundcube html5_notifier plugin
 	git_clone https://github.com/kitist/html5_notifier.git $HTML5_NOTIFIER_VERSION '' ${RCM_PLUGIN_DIR}/html5_notifier
 
+	# install roundcube context menu plugin
+	git_clone https://github.com/kitist/html5_notifier.git $CONTEXT_MENU_VERSION '' ${RCM_PLUGIN_DIR}/contextmenu
+
 	# download and verify the full release of the carddav plugin
 	wget_verify \
-		https://github.com/blind-coder/rcmcarddav/releases/download/v${CARDDAV_VERSION}/carddav-${CARDDAV_VERSION}.zip \
+		https://github.com/blind-coder/rcmcarddav/releases/download/v${CARDDAV_VERSION}/carddav-v${CARDDAV_VERSION}.tar.gz \
 		$CARDDAV_HASH \
-		/tmp/carddav.zip
+		/tmp/carddav.tar.gz
 
 	# unzip and cleanup
-	unzip -q /tmp/carddav.zip -d ${RCM_PLUGIN_DIR}
-	rm -f /tmp/carddav.zip
+	# unzip -q /tmp/carddav.zip -d ${RCM_PLUGIN_DIR}
+	tar -C ${RCM_PLUGIN_DIR} -zxf /tmp/carddav.tar.gz
+	rm -f /tmp/carddav.tar.gz
 
 	# record the version we've installed
 	echo $UPDATE_KEY > ${RCM_DIR}/version
@@ -127,7 +132,7 @@ cat > $RCM_CONFIG <<EOF;
  );
 \$config['support_url'] = 'https://mailinabox.email/';
 \$config['product_name'] = '$PRIMARY_HOSTNAME Webmail';
-\$config['plugins'] = array('html5_notifier', 'archive', 'zipdownload', 'password', 'managesieve', 'jqueryui', 'persistent_login', 'carddav', 'enigma');
+\$config['plugins'] = array('html5_notifier', 'contextmenu', 'archive', 'zipdownload', 'password', 'managesieve', 'jqueryui', 'persistent_login', 'carddav', 'enigma');
 \$config['cipher_method'] = 'AES-256-CBC'; # persistent login cookie and potentially other things
 \$config['des_key'] = '$SECRET_KEY'; # 37 characters -> ~256 bits for AES-256, see above
 \$config['skin'] = 'elastic';

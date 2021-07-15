@@ -77,7 +77,7 @@ if [ $needs_update == 1 ]; then
 	git_clone https://github.com/kitist/html5_notifier.git $HTML5_NOTIFIER_VERSION '' ${RCM_PLUGIN_DIR}/html5_notifier
 
 	# install roundcube context menu plugin
-	git_clone https://github.com/kitist/html5_notifier.git $CONTEXT_MENU_VERSION '' ${RCM_PLUGIN_DIR}/contextmenu
+	git_clone https://github.com/johndoh/roundcube-contextmenu.git $CONTEXT_MENU_VERSION '' ${RCM_PLUGIN_DIR}/contextmenu
 
 	# download and verify the full release of the carddav plugin
 	wget_verify \

@@ -80,7 +80,7 @@ EOF
 
     #rm /tmp/mysqlcreate
 
-    sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/occ maintenance:install --database=mysql --database-name=nextcloud --database-user=nextcloudfull --database-pass=${SECRET_KEY_SQLNC} --admin-user=adminnc --admin-pass=${SECRET_KEY_SQLNC} --admin-email=${$EMAIL_ADDR}
+    sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/occ maintenance:install --database=mysql --database-name=nextcloud --database-user=nextcloudfull --database-pass=${SECRET_KEY_SQLNC} --admin-user=adminnc --admin-pass=${SECRET_KEY_SQLNC} --admin-email=${EMAIL_ADDR}
 
     
 

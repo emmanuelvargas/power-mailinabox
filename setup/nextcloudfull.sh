@@ -167,7 +167,7 @@ cat > /var/www/nextcloudfull/nextcloud/config/config.php << EOF;
   'secret' => 'GiGf/KCE89gy1R+50ScZ9Hg34t1kvft7lEJhzv9XZoQ401UA',
   'trusted_domains' => 
   array (
-    0 => 'nextcloud.evargas.org',
+    0 => 'nextcloud.$DEFAULT_DOMAIN_GUESS',
   ),
   'datadirectory' => '/var/www/nextcloudfull/nextcloud/data',
   'version' => '22.0.0.11',
@@ -182,7 +182,7 @@ cat > /var/www/nextcloudfull/nextcloud/config/config.php << EOF;
   'installed' => true,
   'logtimezone' => 'Europe/Paris',
   'logdateformat' => 'Y-m-d H:i:s',
-  'mail_domain' => 'mybox.evargas.org',
+  'mail_domain' => '$PRIMARY_HOSTNAME',
   'theme' => '',
   'loglevel' => 2,
   'maintenance' => false,

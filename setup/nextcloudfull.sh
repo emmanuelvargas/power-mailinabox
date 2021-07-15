@@ -64,9 +64,13 @@ InstallNextcloud() {
 	# that error.
 	chown -f -R www-data.www-data $NEXTCLOUD_FULL/ || /bin/true
 
+# random password
+SECRET_KEY_SQLNC=$(dd if=/dev/urandom bs=1 count=12 2>/dev/null | base64 | sed s/=//g)
+
+
 # create mysql DB
 cat > /tmp/mysqlcreate << EOF;
-CREATE USER 'nextcloudfull'@'localhost' IDENTIFIED BY 'BLA123';
+CREATE USER 'nextcloudfull'@'localhost' IDENTIFIED BY '${SECRET_KEY_SQLNC}';
 CREATE DATABASE IF NOT EXISTS nextcloud CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloudfull'@'localhost';
 FLUSH PRIVILEGES;
@@ -74,9 +78,9 @@ EOF
 
     mysql -uroot < /tmp/mysqlcreate
 
-    rm /tmp/mysqlcreate
+    #rm /tmp/mysqlcreate
 
-    sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/occ maintenance:install --database=mysql --database-name=nextcloud --database-user=nextcloudfull --database-pass=BLA123 --admin-user=toto --admin-pass=toto --admin-email=manu@evargas.org
+    sudo -u www-data php $NEXTCLOUD_FULL/nextcloud/occ maintenance:install --database=mysql --database-name=nextcloud --database-user=nextcloudfull --database-pass=${SECRET_KEY_SQLNC} --admin-user=adminnc --admin-pass=${SECRET_KEY_SQLNC} --admin-email=${$EMAIL_ADDR}
 
     
 
@@ -178,7 +182,7 @@ cat > /var/www/nextcloudfull/nextcloud/config/config.php << EOF;
   'dbtableprefix' => 'oc_',
   'mysql.utf8mb4' => true,
   'dbuser' => 'nextcloudfull',
-  'dbpassword' => 'BLA123',
+  'dbpassword' => '${SECRET_KEY_SQLNC}',
   'installed' => true,
   'logtimezone' => 'Europe/Paris',
   'logdateformat' => 'Y-m-d H:i:s',

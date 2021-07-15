@@ -359,7 +359,7 @@ def provision_certificates(env, limit_domains):
 						"--webroot", "--webroot-path", webroot,
 
 						"--config-dir", account_path,
-						#"--staging",
+						"--staging",
 					], stderr=subprocess.STDOUT).decode("utf8")
 					install_cert_copy_file(cert_file, env)
 

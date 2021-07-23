@@ -47,6 +47,8 @@ else
 	FIRST_TIME_SETUP=1
 fi
 
+DEFAULT_DOMAIN_GUESS=$(echo $(get_default_hostname) | sed -e 's/^box\.//')
+
 # Put a start script in a global location. We tell the user to run 'mailinabox'
 # in the first dialog prompt, so we should do this before that starts.
 cat > /usr/local/bin/mailinabox << EOF;
@@ -69,6 +71,22 @@ if [ -z "${DEFAULT_PRIMARY_HOSTNAME:-}" ]; then
 if [ -z "${SKIP_NETWORK_CHECKS:-}" ]; then
 	source setup/network-checks.sh
 fi
+fi
+
+if [ -z "${DEFAULT_SECRET_KEY_SQLNC:-}" ]; then
+    echo "--- First installation, database password generation"
+    # random password
+    SECRET_KEY_SQLNC=$(dd if=/dev/urandom bs=1 count=12 2>/dev/null | base64 | sed s/=//g)
+else
+	SECRET_KEY_SQLNC=$DEFAULT_SECRET_KEY_SQLNC
+fi
+
+if [ -z "${DEFAULT_SECRET_KEY_SQL:-}" ]; then
+        echo "--- First installation, database ROOT password generation"
+        # random password
+        SECRET_KEY_SQL=$(dd if=/dev/urandom bs=1 count=32 2>/dev/null | base64 | sed s/=//g)
+else
+        SECRET_KEY_SQL=$DEFAULT_SECRET_KEY_SQL
 fi
 
 # Create the STORAGE_USER and STORAGE_ROOT directory if they don't already exist.
@@ -103,6 +121,8 @@ PRIVATE_IPV6=$PRIVATE_IPV6
 GNUPGHOME=${STORAGE_ROOT}/.gnupg/
 PGPKEY=${DEFAULT_PGPKEY-}
 MTA_STS_MODE=${DEFAULT_MTA_STS_MODE:-enforce}
+SECRET_KEY_SQLNC=$SECRET_KEY_SQLNC
+SECRET_KEY_SQL=$SECRET_KEY_SQL
 EOF
 
 # Start service configuration.
@@ -118,7 +138,8 @@ source setup/spamassassin.sh
 source setup/web.sh
 source setup/webmail.sh
 source setup/nextcloud.sh
-source setup/nextcloudfull.sh
+#source setup/nextcloudfull.sh
+source setup/nextcloud_full.sh
 source setup/zpush.sh
 source setup/management.sh
 source setup/munin.sh

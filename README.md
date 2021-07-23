@@ -22,6 +22,15 @@ sudo dpkg-reconfigure locales
 curl https://raw.githubusercontent.com/ddavness/power-mailinabox/master/setup/bootstrap.sh | sudo bash
 ```
 
+**Restoring Power-Mail-in-a-Box**
+```
+export PASSPHRASE=$(cat your_backup_secret_key_file.txt)
+sudo -E duplicity restore --force file:///path/to/copied/files /home/user-data/
+sudo su -
+cd mailinabox
+RESTORE=1 EMAIL_ADDR="me@yourdomain.lt" ./setup/start.sh
+```
+
 ## Current Version: v0.54.POWER.3 (Tracking v0.54)
 
 This is a fork of MiaB (duh), hacked and tuned to my needs:

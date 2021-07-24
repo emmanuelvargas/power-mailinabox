@@ -149,9 +149,6 @@ if [ ! -d /usr/local/lib/nextcloud/ ] || [[ ! ${CURRENT_NEXTCLOUD_VER} =~ ^$next
 		echo "Upgrading Nextcloud --- backing up existing installation, configuration, and database to directory to $BACKUP_DIRECTORY..."
 		cp -r /usr/local/lib/nextcloud "$BACKUP_DIRECTORY/nextcloud-install"
 	fi
-	if [ -e $STORAGE_ROOT/nextcloud/nextcloud.db ]; then
-		cp $STORAGE_ROOT/nextcloud/nextcloud.db $BACKUP_DIRECTORY
-	fi
 	if [ -e $STORAGE_ROOT/nextcloud/config.php ]; then
 		cp $STORAGE_ROOT/nextcloud/config.php $BACKUP_DIRECTORY
 	fi

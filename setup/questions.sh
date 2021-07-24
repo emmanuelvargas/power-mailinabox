@@ -83,6 +83,50 @@ address, so we're suggesting $DEFAULT_PRIMARY_HOSTNAME.
 	fi
 fi
 
+# adding whitelist ip address for admin
+
+if [ -z "${WHITELIST_IP:-}" ]; then
+	if [ -z "${DEFAULT_WHITELIST_IP+x}" ]; then 
+		DEFAULT_WHITELIST_IP="127.0.0.1"
+	fi
+
+	input_box "Whitelist IP address" \
+" Please enter the list of IP ADDRESS allowed to reach the ADMIN part of the tool.
+\n\nEnter a list of IP separeted by a ','
+\n\nFor example 127.0.0.1,95.95.95.95
+\n\nIP address:" \
+		$DEFAULT_WHITELIST_IP \
+		WHITELIST_IP
+
+	if [ -z "$WHITELIST_IP" ]; then
+		# user hit ESC/cancel
+		exit
+	fi
+
+	IPARRAY=(`echo $WHITELIST_IP | tr ',' ' '`)
+	VALIDATED=1
+
+	while [ $VALIDATED -ge 1 ]; do
+		VALIDATED=0
+		IPARRAY=(`echo $WHITELIST_IP | tr ',' ' '`)
+		for ip in "${IPARRAY[@]}"; do
+			if ! python3 management/ip_address.py validate-ip "$ip"; then
+				VALIDATED=1
+			fi
+		done
+		if [ ! "$VALIDATED" -eq "0" ]; then
+			input_box "whitelist IP" \
+						"ip list not valid.\n\nWhat ip address to add to whitelist?" \
+						$WHITELIST_IP \
+						WHITELIST_IP
+					if [ -z "$WHITELIST_IP" ]; then
+						# user hit ESC/cancel
+						exit
+					fi
+		fi
+	done	
+fi
+
 # If the machine is behind a NAT, inside a VM, etc., it may not know
 # its IP address on the public network / the Internet. Ask the Internet
 # and possibly confirm with user.

@@ -157,6 +157,14 @@ if [ ! -f $STORAGE_ROOT/www/default/index.html ]; then
 fi
 chown -R $STORAGE_USER $STORAGE_ROOT/www
 
+# allow only some IP to access /admin
+echo "" > /etc/nginx/blockips.conf
+IPARRAY=(`echo $WHITELIST_IP | tr ',' ' '`)
+for ip in "${IPARRAY[@]}"; do
+	echo "allow $ip;" >> /etc/nginx/blockips.conf
+done
+echo "deny all;" >> /etc/nginx/blockips.conf
+
 # Start services.
 restart_service nginx
 restart_service php$(php_version)-fpm
